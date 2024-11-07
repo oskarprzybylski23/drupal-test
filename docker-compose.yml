@@ -7,8 +7,9 @@ services:
     container_name: mysqldb
     restart: always
     environment:
-      MYSQL_DATABASE: drupal
+      MYSQL_DATABASE: drupaldb
       MYSQL_ROOT_PASSWORD: drupal
+      MYSQL_PASSWORD: drupal
     volumes:
       - db_data:/var/lib/mysql
 
@@ -28,7 +29,6 @@ services:
     volumes:
       - ./web/modules:/var/www/html/modules
       - ./web/themes:/var/www/html/themes
-      - ./web/sites:/var/www/html/sites
     depends_on:
       - mysqldb
 
