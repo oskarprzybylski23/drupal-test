@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysqldb:
+    image: mysql:latest
+    container_name: mysqldb
+    restart: always
+    environment:
+      MYSQL_DATABASE: drupal
+      MYSQL_ROOT_PASSWORD: drupal
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # Drupal
+  drupal:
+    image: drupal:latest
+    container_name: drupal
+    ports:
+      - "8090:80"  # Drupal will be accessible at localhost:8090
+    links:
+      - mysqldb
+    environment:
+      DRUPAL_DB_HOST: mysqldb
+      DRUPAL_DB_USER: root
+      DRUPAL_DB_PASSWORD: drupal
+      DRUPAL_DB_NAME: drupaldb
+    volumes:
+      - ./web/modules:/var/www/html/modules
+      - ./web/themes:/var/www/html/themes
+      - ./web/sites:/var/www/html/sites
+    depends_on:
+      - mysqldb
+
+  # phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
+    ports:
+      - "8081:80"  # phpMyAdmin will be accessible at localhost:8080
+    environment:
+      PMA_HOST: mysqldb
+      MYSQL_ROOT_PASSWORD: drupal
+    depends_on:
+      - mysqldb
+
+volumes:
+  db_data:
