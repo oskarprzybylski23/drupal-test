@@ -29,6 +29,8 @@ services:
     volumes:
       - ./web/modules:/var/www/html/modules
       - ./web/themes:/var/www/html/themes
+      - ./web/sites:/var/www/html/sites
+
     depends_on:
       - mysqldb
 
